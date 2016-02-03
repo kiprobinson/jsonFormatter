@@ -64,21 +64,29 @@ input {
   clear: both;
 }
 </style>
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script type="text/javascript">
 //<![CDATA[
-$(function() {
+document.addEventListener('DOMContentLoaded', function(event) { 
   
-  $(window).on('resize', resizeInput);
-  $('#input, #numSpaces').on('keyup', formatJson);
-  $('#prettify, #uglify').on('click', formatJson);
-  $('#numSpaces').on('focus', function() {
-    $('#spaces').prop('checked', true);
-    $('#prettify').prop('checked', true);
+  //shortcut to getElementById...
+  function el(name) { return document.getElementById(name); }
+  
+  window.addEventListener('resize', resizeInput);
+  el('input').addEventListener('keyup', formatJson);
+  el('numSpaces').addEventListener('keyup', formatJson);
+  el('prettify').addEventListener('click', formatJson);
+  el('uglify').addEventListener('click', formatJson);
+  el('numSpaces').addEventListener('focus', function() {
+    el('spaces').checked = true;
+    el('prettify').checked = true;
     formatJson();
   });
-  $('#spaces, #tabs').on('click', function() {
-    $('#prettify').prop('checked', true);
+  el('spaces').addEventListener('click', function() {
+    el('prettify').checked = true;
+    formatJson();
+  });
+  el('tabs').addEventListener('click', function() {
+    el('prettify').checked = true;
     formatJson();
   });
   
@@ -86,30 +94,29 @@ $(function() {
   
   
   function formatJson() {
-    var $input = $('#input');
     var spacing = null;
     
-    if($('#prettify').is(':checked'))
+    if(el('prettify').checked)
     {
-      $('html').removeClass('uglify').addClass('prettify');
+      document.getElementsByTagName('html')[0].className = 'prettify';
       spacing = '\t';
-      if($('#spaces').is(':checked'))
+      if(el('spaces').checked)
       {
-        spacing = Number($('#numSpaces').val());
+        spacing = Number(el('numSpaces').value);
         if(Number.isNaN(spacing) || spacing < 1)
           spacing = 1;
       }
     }
     else
     {
-      $('html').removeClass('prettify').addClass('uglify');
+      document.getElementsByTagName('html')[0].className = 'uglify';
     }
     
     try
     {
-      var jsonIn = $input.val();
+      var jsonIn = el('input').value;
       if(jsonIn != '')
-        $input.val(JSON.stringify(JSON.parse(jsonIn), null, spacing));
+        el('input').value = JSON.stringify(JSON.parse(jsonIn), null, spacing);
       setErrorMessage('');
     }
     catch (e)
@@ -122,15 +129,15 @@ $(function() {
    * Adjusts the size of the input control so that it will fill up the whole screen.
    */
   function resizeInput() {
-    //The text areas should fill the whole vertical space
+    //The text area should fill the whole vertical space
     var minHeight = 50;
-    var newHeight = $(window).height() - ($('body').height() - $('#input').height());
+    var newHeight = window.innerHeight - (document.body.offsetHeight - el('input').offsetHeight);
     newHeight = Math.max(newHeight, minHeight);
-    $('textarea').height(newHeight);
+    el('input').style.height = newHeight + 'px';
   }
   
   function setErrorMessage(msg) {
-    $('#errorMessage').text(msg);
+    el('errorMessage').innerText = msg;
     resizeInput();
   }
 });
