@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<!--
+This app is completely self-contained. You don't even need a web server, you can just open the html
+file in a browser from your local machine and run it directly.
+
+@author Kip Robinson, https://github.com/kiprobinson
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>JSON Formatter</title>
+<link rel="shortcut icon" href="http://dl.dropbox.com/u/5738517/favicon-json.ico"/>
+<style type="text/css">
+/* Copied from: http://yui.yahooapis.com/3.18.1/build/cssreset/cssreset-min.css */
+html{color:#000;background:#FFF}body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td{margin:0;padding:0}table{border-collapse:collapse;border-spacing:0}fieldset,img{border:0}address,caption,cite,code,dfn,em,strong,th,var{font-style:normal;font-weight:normal}ol,ul{list-style:none}caption,th{text-align:left}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal}q:before,q:after{content:''}abbr,acronym{border:0;font-variant:normal}sup{vertical-align:text-top}sub{vertical-align:text-bottom}input,textarea,select{font-family:inherit;font-size:inherit;font-weight:inherit;*font-size:100%}legend{color:#000}#yui3-css-stamp.cssreset{display:none}
+/* --- end Yahoo reset script --- */
+
+html, html.prettify {
+  background-color: #dfb4f3;
+}
+html.uglify {
+  background-color: #a76040;
+}
+body {
+  font-family: Tahoma,Arial,sans-serif;
+  font-size: 1.2em;
+  font-weight: bold;
+  padding: 1px;
+  padding-right: 5px;
+  overflow: hidden;
+}
+textarea,input[type=text] {
+  /* Font list from StackOverflow.com ... */
+  font-family: Consolas,Menlo,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New,monospace,serif;
+  font-size: 1.2em;
+  font-weight: bold;
+  border: 1px solid black;
+  margin: 1px;
+  resize: none;
+}
+textarea:focus, input[type=text]:focus {
+  background-color: #fff3de;
+}
+input {
+  padding-left: 2px;
+  padding-right: 2px;
+}
+#input {
+  width: 100%;
+  height: 250px;
+  border: 1px solid black;
+}
+#errorMessage {
+  color: white;
+  background-color: red;
+}
+.control {
+  display: inline-block;
+  float: left;
+  width: 50%;
+}
+.clear {
+  clear: both;
+}
+</style>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script type="text/javascript">
+//<![CDATA[
+$(function() {
+  
+  $(window).on('resize', resizeInput);
+  $('#input, #numSpaces').on('keyup', formatJson);
+  $('#prettify, #uglify').on('click', formatJson);
+  $('#numSpaces').on('focus', function() {
+    $('#spaces').prop('checked', true);
+    $('#prettify').prop('checked', true);
+    formatJson();
+  });
+  $('#spaces, #tabs').on('click', function() {
+    $('#prettify').prop('checked', true);
+    formatJson();
+  });
+  
+  resizeInput();
+  
+  
+  function formatJson() {
+    var $input = $('#input');
+    var spacing = null;
+    
+    if($('#prettify').is(':checked'))
+    {
+      $('html').removeClass('uglify').addClass('prettify');
+      spacing = '\t';
+      if($('#spaces').is(':checked'))
+      {
+        spacing = Number($('#numSpaces').val());
+        if(Number.isNaN(spacing) || spacing < 1)
+          spacing = 1;
+      }
+    }
+    else
+    {
+      $('html').removeClass('prettify').addClass('uglify');
+    }
+    
+    try
+    {
+      var jsonIn = $input.val();
+      if(jsonIn != '')
+        $input.val(JSON.stringify(JSON.parse(jsonIn), null, spacing));
+      setErrorMessage('');
+    }
+    catch (e)
+    {
+      setErrorMessage(e);
+    }
+  }
+  
+  /**
+   * Adjusts the size of the input control so that it will fill up the whole screen.
+   */
+  function resizeInput() {
+    //The text areas should fill the whole vertical space
+    var minHeight = 50;
+    var newHeight = $(window).height() - ($('body').height() - $('#input').height());
+    newHeight = Math.max(newHeight, minHeight);
+    $('textarea').height(newHeight);
+  }
+  
+  function setErrorMessage(msg) {
+    $('#errorMessage').text(msg);
+    resizeInput();
+  }
+});
+//]]> 
+</script>
+</head>
+<body>
+<div id="controls">
+  <div class="control">
+    <input type="radio" id="prettify" name="action" value="prettify" checked />
+    <label for="prettify">Prettify, using:</label> 
+      
+    <div style="display: inline-block; vertical-align: middle;">
+      <input type="radio" id="spaces" name="indentationMethod" value="spaces" />
+      <input type="text" id="numSpaces" name="numSpaces" value="4" style="width: 1em" pattern="([1-9]|10)" /><label for="spaces"> spaces</label>
+      <br/>
+      <input type="radio" id="tabs" name="indentationMethod" value="tabs" checked />
+      <label for="tabs">tabs</label>
+    </div>
+  </div>
+  <div class="control">
+    <input type="radio" id="uglify" name="action" value="uglify" />
+    <label for="uglify">Uglify</label>
+  </div>
+  <div class="clear"></div>
+</div>
+<div id="errorMessage"></div>
+<textarea id="input" wrap="off" placeholder="Paste some JSON here!"></textarea>
+</body>
+</html>
