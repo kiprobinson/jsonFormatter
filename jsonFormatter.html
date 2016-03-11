@@ -76,6 +76,7 @@ document.addEventListener('DOMContentLoaded', function(event) {
   el('numSpaces').addEventListener('keyup', formatJson);
   el('prettify').addEventListener('click', formatJson);
   el('uglify').addEventListener('click', formatJson);
+  el('alphabetize').addEventListener('click', formatJson);
   el('numSpaces').addEventListener('focus', function() {
     el('spaces').checked = true;
     el('prettify').checked = true;
@@ -115,8 +116,11 @@ document.addEventListener('DOMContentLoaded', function(event) {
     try
     {
       var jsonIn = el('input').value;
-      if(jsonIn != '')
+      if(jsonIn != '') {
+        if(el('alphabetize').checked)
+          jsonIn = alphabetizeJson(JSON.parse(jsonIn));
         el('input').value = JSON.stringify(JSON.parse(jsonIn), null, spacing);
+      }
       setErrorMessage('');
     }
     catch (e)
@@ -124,6 +128,46 @@ document.addEventListener('DOMContentLoaded', function(event) {
       setErrorMessage(e);
     }
   }
+  
+  /**
+   * Takes a javascript object, returns JSON string representation of object with properties sorted.
+   */
+  function alphabetizeJson(obj) {
+    var ret = '';
+    if(Array.isArray(obj)) {
+      ret += '[';
+      for(var i = 0; i < obj.length; i++) {
+        if(i > 0)
+          ret += ',';
+        ret += alphabetizeJson(obj[i]);
+      }
+      ret += ']';
+    }
+    else if (isObject(obj)) {
+      var keys = Object.keys(obj);
+      keys.sort();
+      ret += '{';
+      for(var i = 0; i < keys.length; i++) {
+        if(i > 0)
+          ret += ',';
+        ret += JSON.stringify(keys[i]) + ':' + alphabetizeJson(obj[keys[i]]);
+      }
+      ret += '}';
+    }
+    else {
+      ret += JSON.stringify(obj);
+    }
+    
+    return ret;
+  }
+  
+  /**
+   * Returns whether or not an object is an object literal.
+   * Using the solution found here: http://stackoverflow.com/a/16608074/18511
+   */
+  function isObject(a) {
+    return (!!a) && (a.constructor === Object);
+  };
   
   /**
    * Adjusts the size of the input control so that it will fill up the whole screen.
@@ -156,6 +200,10 @@ document.addEventListener('DOMContentLoaded', function(event) {
       <br/>
       <input type="radio" id="tabs" name="indentationMethod" value="tabs" checked />
       <label for="tabs">tabs</label>
+    </div>
+    <div style="display: inline-block; vertical-align: middle; margin-left: 1.0em;">
+      <input type="checkbox" id="alphabetize" />
+      <label for="alphabetize">Sort Structs?</label>
     </div>
   </div>
   <div class="control">
