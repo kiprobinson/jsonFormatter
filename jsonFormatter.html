@@ -104,11 +104,14 @@ document.addEventListener('DOMContentLoaded', function(event) {
     formatJson();
   });
   
+  loadOptions();
   resizeInput();
+  formatJson();
   
   
   function formatJson() {
     var spacing = null;
+    saveOptions();
     
     if(el('prettify').checked)
     {
@@ -210,6 +213,45 @@ document.addEventListener('DOMContentLoaded', function(event) {
     a = a.toLowerCase();
     b = b.toLowerCase();
     return (a < b ? -1 : (a > b ? 1 : 0));
+  }
+  
+  function loadOptions() {
+    let saved = {};
+    try { saved = JSON.parse(localStorage.getItem('json-formatter')) }
+    catch (e) { console.error(e); }
+    
+    if(!saved)
+      return;
+    
+    if('boolean' === typeof saved.prettify) {
+      el('prettify').checked = saved.prettify;
+      el('uglify').checked = !saved.prettify;
+    }
+    if('boolean' === typeof saved.tabs) {
+      el('spaces').checked = !saved.tabs;
+      el('tabs').checked = saved.tabs;
+    }
+    if('string' === typeof saved.numSpaces && saved.numSpaces.match(/^[1-9]$/)) {
+      el('numSpaces').value = saved.numSpaces;
+    }
+    if('boolean' === typeof saved.alphabetize)
+      el('alphabetize').checked = saved.alphabetize;
+    if('boolean' === typeof saved.alphabetize_simplefirst)
+      el('alphabetize_simplefirst').checked = saved.alphabetize_simplefirst;
+    el('alphabetize_simplefirst').disabled = !el('alphabetize').checked
+  }
+  
+  function saveOptions() {
+    const options = {
+      prettify: el('prettify').checked,
+      tabs: el('tabs').checked,
+      numSpaces: el('numSpaces').value,
+      alphabetize: el('alphabetize').checked,
+      alphabetize_simplefirst: el('alphabetize_simplefirst').checked,
+    };
+    
+    try { localStorage.setItem('json-formatter', JSON.stringify(options)); }
+    catch (e) { console.error(e) };
   }
 });
 //]]> 
