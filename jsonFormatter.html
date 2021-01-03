@@ -69,6 +69,10 @@ input {
 #uglify {
   margin-top: 1.0em;
 }
+#download {
+  font: inherit;
+  margin-top: 0.65em;
+}
 #copyright {
   text-align: center;
   font-size: 0.5em;
@@ -108,6 +112,9 @@ document.addEventListener('DOMContentLoaded', function(event) {
   el('tabs').addEventListener('click', function() {
     el('prettify').checked = true;
     formatJson();
+  });
+  el('download').addEventListener('click', function() {
+    downloadJson();
   });
   
   loadOptions();
@@ -191,6 +198,19 @@ document.addEventListener('DOMContentLoaded', function(event) {
     return ret;
   }
   
+  function downloadJson() {
+    const json = el('input').value;
+    const a = document.createElement("a");
+    a.style = "display: none";
+    
+    const url = window.URL.createObjectURL(new Blob([json], {type:'application/json'}));
+    a.href = url;
+    a.download = 'formatted.json';
+    a.click();
+    window.URL.revokeObjectURL(url);
+    a.remove();
+  }
+  
   /**
    * Returns whether or not an object is an object literal.
    * Using the solution found here: http://stackoverflow.com/a/16608074/18511
@@ -212,6 +232,7 @@ document.addEventListener('DOMContentLoaded', function(event) {
   
   function setErrorMessage(msg) {
     el('errorMessage').textContent = msg;
+    el('download').disabled = (msg !== '');
     resizeInput();
   }
   
@@ -286,6 +307,9 @@ document.addEventListener('DOMContentLoaded', function(event) {
   <div class="control">
     <input type="radio" id="uglify" name="action" value="uglify" />
     <label for="uglify">Uglify</label>
+    <div style="float:right">
+      <button id="download">Download JSON</button>
+    </div>
   </div>
   <div class="clear"></div>
 </div>
