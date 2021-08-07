@@ -12,8 +12,10 @@ file in a browser from your local machine and run it directly.
 <title>JSON Formatter</title>
 <link rel="shortcut icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwwAADsMBx2+oZAAAABl0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMC4xOdTWsmQAAAK6SURBVDhPY7i/5TMc3Vz/5vzyR1fXvLi3+ROQ+3Dr14srHh+df/3K6md3N314sOULUBCq4cHWL6eX3At2jtZRNrA1dN7UfwioemrFYhMtS6CIha5tQVTVrQ3vkDRs+XJz/duUgFwGBgagonPLHx6Zd1VOUpGRkTEvsqI8odHG0OnU4jsPtn6Fani0/fvTnb/6i2cDNfjahQAtPDz3irykEpArJSrj7xA2pXzhnU0fQDYAzb6x7vXCpvWH5l6eVDYfqCLQMQIocWHF49rUDnV5LRZmVqCgqpzm0fnXHm77ygA0e33ffm5Ongj3hIb0bqBcnE/64x0/Fjdv9LYNWtO9Oy0oHygoJiSxZ8bZR9u+MQA9d2LhLTsjZ2lRWVlxeQUp5WVtWx9v/35swQ0rfXtdFUNNRR0JYamy+MbbG9+DnATEQBdfXPlkZeeOBY3rgH6FiAD1AAXX9e5b0rJ5/6wLQHOBInANX4EhMLd+9ZSKhTumngRGwrW1L+c3rJ1eteTssgfPdv0+Mv8a0HuLWzbdWP+GAeiP1V27dFQMgKHBy80nIiBan959fOFNU20roNNtDZ2AxgP9w8vN72bpe2nlE4ZLK59aGzhysnMB3dOU2cfCzCLEJ7xpwqHmrH6gBiAAemNe/Rog2V0w/cmOHwzbp5wQFRTn4uBe37vv/PKHqnIaQEVNmb2TyxeysrDxcfMDuUL8IsBgnFy+ABh6DIfmXlGUVgGKFkZXA6MGmC6A7L6iWRNL5ynLqM2sWa6vZgIUYWRkgmoAehEY+UA+MOyS/LOBthlrmh+bfz0ztAjI3j7lONAPQDczMTFNqVgE0gAMwSurnwM9aqXvYKRhnhyQDVRxbe2reN8MM23r2bUrge4GxgmQC/QYKOIgoQ4MK2BQAnUCuUA2kLy14S04nX8EiWz9CnQtiL3lMwCze5dM+A+2OAAAAABJRU5ErkJggg=="/>
 <style type="text/css">
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@600&family=Open+Sans:ital,wght@0,300;0,700;1,300;1,700&display=swap');
+
 /* Copied from: http://yui.yahooapis.com/3.18.1/build/cssreset/cssreset-min.css */
-html{color:#000;background:#FFF}body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td{margin:0;padding:0}table{border-collapse:collapse;border-spacing:0}fieldset,img{border:0}address,caption,cite,code,dfn,em,strong,th,var{font-style:normal;font-weight:normal}ol,ul{list-style:none}caption,th{text-align:left}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal}q:before,q:after{content:''}abbr,acronym{border:0;font-variant:normal}sup{vertical-align:text-top}sub{vertical-align:text-bottom}input,textarea,select{font-family:inherit;font-size:inherit;font-weight:inherit;*font-size:100%}legend{color:#000}#yui3-css-stamp.cssreset{display:none}
+html{color:#000;background:#FFF}body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td{margin:0;padding:0}table{border-collapse:collapse;border-spacing:0}fieldset,img{border:0}address,caption,cite,code,dfn,em,strong,th,var{font-style:normal;font-weight:normal}ol,ul{list-style:none}caption,th{text-align:left}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal}q:before,q:after{content:''}abbr,acronym{border:0;font-variant:normal}sup{vertical-align:text-top}sub{vertical-align:text-bottom}input,textarea,select,button{font-family:inherit;font-size:inherit;font-weight:inherit;*font-size:100%}legend{color:#000}#yui3-css-stamp.cssreset{display:none}
 /* --- end Yahoo reset script --- */
 
 *{box-sizing: border-box}
@@ -25,18 +27,17 @@ html.uglify {
   background-color: #a76040;
 }
 body {
-  font-family: Tahoma,Arial,sans-serif;
+  font-family: "Open Sans",sans-serif;
   font-size: 1.2em;
-  font-weight: bold;
+  font-weight: 700;
   padding: 1px;
   padding-right: 5px;
   overflow: hidden;
 }
 textarea,input[type=text] {
-  /* Font list from StackOverflow.com ... */
-  font-family: Consolas,Menlo,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New,monospace,serif;
+  font-family: "Fira Code",monospace,serif;
   font-size: 1.2em;
-  font-weight: bold;
+  font-weight: 600;
   border: 1px solid black;
   margin: 1px;
   resize: none;
@@ -70,13 +71,12 @@ input {
   margin-top: 1.0em;
 }
 #download {
-  font: inherit;
   margin-top: 0.65em;
 }
 #copyright {
   text-align: center;
   font-size: 0.5em;
-  font-weight: normal;
+  font-weight: 300;
   padding-bottom: 2px;
 }
 .clear {
