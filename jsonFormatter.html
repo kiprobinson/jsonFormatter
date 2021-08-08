@@ -11,9 +11,10 @@ file in a browser from your local machine and run it directly.
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <title>JSON Formatter</title>
 <link rel="shortcut icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwwAADsMBx2+oZAAAABl0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMC4xOdTWsmQAAAK6SURBVDhPY7i/5TMc3Vz/5vzyR1fXvLi3+ROQ+3Dr14srHh+df/3K6md3N314sOULUBCq4cHWL6eX3At2jtZRNrA1dN7UfwioemrFYhMtS6CIha5tQVTVrQ3vkDRs+XJz/duUgFwGBgagonPLHx6Zd1VOUpGRkTEvsqI8odHG0OnU4jsPtn6Fani0/fvTnb/6i2cDNfjahQAtPDz3irykEpArJSrj7xA2pXzhnU0fQDYAzb6x7vXCpvWH5l6eVDYfqCLQMQIocWHF49rUDnV5LRZmVqCgqpzm0fnXHm77ygA0e33ffm5Ongj3hIb0bqBcnE/64x0/Fjdv9LYNWtO9Oy0oHygoJiSxZ8bZR9u+MQA9d2LhLTsjZ2lRWVlxeQUp5WVtWx9v/35swQ0rfXtdFUNNRR0JYamy+MbbG9+DnATEQBdfXPlkZeeOBY3rgH6FiAD1AAXX9e5b0rJ5/6wLQHOBInANX4EhMLd+9ZSKhTumngRGwrW1L+c3rJ1eteTssgfPdv0+Mv8a0HuLWzbdWP+GAeiP1V27dFQMgKHBy80nIiBan959fOFNU20roNNtDZ2AxgP9w8vN72bpe2nlE4ZLK59aGzhysnMB3dOU2cfCzCLEJ7xpwqHmrH6gBiAAemNe/Rog2V0w/cmOHwzbp5wQFRTn4uBe37vv/PKHqnIaQEVNmb2TyxeysrDxcfMDuUL8IsBgnFy+ABh6DIfmXlGUVgGKFkZXA6MGmC6A7L6iWRNL5ynLqM2sWa6vZgIUYWRkgmoAehEY+UA+MOyS/LOBthlrmh+bfz0ztAjI3j7lONAPQDczMTFNqVgE0gAMwSurnwM9aqXvYKRhnhyQDVRxbe2reN8MM23r2bUrge4GxgmQC/QYKOIgoQ4MK2BQAnUCuUA2kLy14S04nX8EiWz9CnQtiL3lMwCze5dM+A+2OAAAAABJRU5ErkJggg=="/>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@600&family=Open+Sans:ital,wght@0,300;0,700;1,300;1,700&display=block" rel="stylesheet" />
 <style type="text/css">
-@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@600&family=Open+Sans:ital,wght@0,300;0,700;1,300;1,700&display=swap');
-
 /* Copied from: http://yui.yahooapis.com/3.18.1/build/cssreset/cssreset-min.css */
 html{color:#000;background:#FFF}body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td{margin:0;padding:0}table{border-collapse:collapse;border-spacing:0}fieldset,img{border:0}address,caption,cite,code,dfn,em,strong,th,var{font-style:normal;font-weight:normal}ol,ul{list-style:none}caption,th{text-align:left}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal}q:before,q:after{content:''}abbr,acronym{border:0;font-variant:normal}sup{vertical-align:text-top}sub{vertical-align:text-bottom}input,textarea,select,button{font-family:inherit;font-size:inherit;font-weight:inherit;*font-size:100%}legend{color:#000}#yui3-css-stamp.cssreset{display:none}
 /* --- end Yahoo reset script --- */
@@ -121,9 +122,8 @@ document.addEventListener('DOMContentLoaded', function(event) {
   resizeInput();
   formatJson();
   
-  //hack because layout is computed before webfonts load, then the fonts mess it up... I need to find a better way...
+  //hack because webfont load has issues when running from localhost
   setTimeout(resizeInput, 500);
-  
   
   function formatJson() {
     var spacing = null;
