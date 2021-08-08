@@ -121,6 +121,9 @@ document.addEventListener('DOMContentLoaded', function(event) {
   resizeInput();
   formatJson();
   
+  //hack because layout is computed before webfonts load, then the fonts mess it up... I need to find a better way...
+  setTimeout(resizeInput, 500);
+  
   
   function formatJson() {
     var spacing = null;
