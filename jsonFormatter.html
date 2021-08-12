@@ -31,7 +31,6 @@ body {
   font-family: "Open Sans",sans-serif;
   font-size: 1.2em;
   font-weight: 700;
-  padding: 1px;
   padding-right: 5px;
   overflow: hidden;
 }
@@ -50,9 +49,38 @@ input {
   padding-left: 2px;
   padding-right: 2px;
 }
-#input {
+#container {
+  display: flex;
+  flex-direction: column;
+  padding-left: 4px;
+  padding-right: 6px;
+  width: 100vw;
+  height: 100vh;
+}
+#controls, #errorMessage, #copyright {
+  flex: 0;
+}
+#controls {
+  display: flex;
   width: 100%;
-  height: 250px;
+  align-items: center;
+}
+#prettifyControls {
+  flex: 2;
+}
+#prettifyControls > div {
+  display: inline-block;
+  vertical-align: middle;
+}
+#uglifyControls {
+  flex: 1;
+}
+#downloadWrapper {
+  flex: 1;
+  text-align: right;
+}
+#input {
+  flex: 1;
   border: 1px solid black;
   padding: 3px;
 }
@@ -60,25 +88,14 @@ input {
   color: white;
   background-color: red;
 }
-.control {
-  display: inline-block;
-  float: left;
-  width: 50%;
-}
 #numSpaces {
   width: 1em;
-}
-#uglify {
-  margin-top: 1.0em;
-}
-#download {
-  margin-top: 0.65em;
 }
 #copyright {
   text-align: center;
   font-size: 0.5em;
   font-weight: 300;
-  padding-bottom: 2px;
+  padding: 4px;
 }
 .clear {
   clear: both;
@@ -91,7 +108,6 @@ document.addEventListener('DOMContentLoaded', function(event) {
   //shortcut to getElementById...
   function el(name) { return document.getElementById(name); }
   
-  window.addEventListener('resize', resizeInput);
   el('input').addEventListener('keyup', formatJson);
   el('input').addEventListener('paste', () => setTimeout(formatJson));
   el('numSpaces').addEventListener('keyup', formatJson);
@@ -120,11 +136,7 @@ document.addEventListener('DOMContentLoaded', function(event) {
   });
   
   loadOptions();
-  resizeInput();
   formatJson();
-  
-  //hack because webfont load has issues when running from localhost
-  setTimeout(resizeInput, 500);
   
   function formatJson() {
     var spacing = null;
@@ -223,21 +235,9 @@ document.addEventListener('DOMContentLoaded', function(event) {
     return (!!a) && (a.constructor === Object);
   };
   
-  /**
-   * Adjusts the size of the input control so that it will fill up the whole screen.
-   */
-  function resizeInput() {
-    //The text area should fill the whole vertical space
-    var minHeight = 50;
-    var newHeight = window.innerHeight - (document.body.offsetHeight - el('input').offsetHeight);
-    newHeight = Math.max(newHeight, minHeight);
-    el('input').style.height = newHeight + 'px';
-  }
-  
   function setErrorMessage(msg) {
     el('errorMessage').textContent = msg;
     el('download').disabled = (msg !== '');
-    resizeInput();
   }
   
   function strCompareNoCase(a, b) {
@@ -289,36 +289,39 @@ document.addEventListener('DOMContentLoaded', function(event) {
 </script>
 </head>
 <body>
-<div id="controls">
-  <div class="control">
-    <input type="radio" id="prettify" name="action" value="prettify" checked />
-    <label for="prettify">Prettify, using:</label> 
-      
-    <div style="display: inline-block; vertical-align: middle;">
-      <input type="radio" id="spaces" name="indentationMethod" value="spaces" />
-      <input type="text" id="numSpaces" name="numSpaces" value="4" pattern="[1-9]" maxlength="1" /><label for="spaces"> spaces</label>
-      <br/>
-      <input type="radio" id="tabs" name="indentationMethod" value="tabs" checked />
-      <label for="tabs">tabs</label>
+<div id="container">
+  <div id="controls">
+    <div id="prettifyControls">
+      <div>
+        <input type="radio" id="prettify" name="action" value="prettify" checked />
+        <label for="prettify">Prettify, using:</label>
+      </div>
+        
+      <div>
+        <input type="radio" id="spaces" name="indentationMethod" value="spaces" />
+        <input type="text" id="numSpaces" name="numSpaces" value="4" pattern="[1-9]" maxlength="1" /><label for="spaces"> spaces</label>
+        <br/>
+        <input type="radio" id="tabs" name="indentationMethod" value="tabs" checked />
+        <label for="tabs">tabs</label>
+      </div>
+      <div style="margin-left: 1.0em;">
+        <input type="checkbox" id="alphabetize" />
+        <label for="alphabetize">Sort Structs?</label>
+        (<input type="checkbox" id="alphabetize_simplefirst" disabled />
+        <label for="alphabetize_simplefirst">Simple types first?</label>)
+      </div>
     </div>
-    <div style="display: inline-block; vertical-align: middle; margin-left: 1.0em;">
-      <input type="checkbox" id="alphabetize" />
-      <label for="alphabetize">Sort Structs?</label>
-      (<input type="checkbox" id="alphabetize_simplefirst" disabled />
-      <label for="alphabetize_simplefirst">Simple types first?</label>)
+    <div id="uglifyControls">
+      <input type="radio" id="uglify" name="action" value="uglify" />
+      <label for="uglify">Uglify</label>
     </div>
-  </div>
-  <div class="control">
-    <input type="radio" id="uglify" name="action" value="uglify" />
-    <label for="uglify">Uglify</label>
-    <div style="float:right">
+    <div id="downloadWrapper">
       <button id="download">Download JSON</button>
     </div>
   </div>
-  <div class="clear"></div>
-</div>
-<div id="errorMessage"></div>
-<textarea id="input" wrap="off" placeholder="Paste some JSON here!"></textarea>
-<div id="copyright">&copy; Kip Robinson. Details at <a href="https://github.com/kiprobinson/jsonFormatter">GitHub</a>.</div>
+  <div id="errorMessage"></div>
+  <textarea id="input" wrap="off" placeholder="Paste some JSON here!"></textarea>
+  <div id="copyright">&copy; Kip Robinson. Details at <a href="https://github.com/kiprobinson/jsonFormatter">GitHub</a>.</div>
+  </div>
 </body>
 </html>
