@@ -93,6 +93,7 @@ document.addEventListener('DOMContentLoaded', function(event) {
   
   window.addEventListener('resize', resizeInput);
   el('input').addEventListener('keyup', formatJson);
+  el('input').addEventListener('paste', () => setTimeout(formatJson));
   el('numSpaces').addEventListener('keyup', formatJson);
   el('prettify').addEventListener('click', formatJson);
   el('uglify').addEventListener('click', formatJson);
