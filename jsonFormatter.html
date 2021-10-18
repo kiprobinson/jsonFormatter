@@ -73,10 +73,10 @@ input {
   vertical-align: middle;
 }
 #uglifyControls {
-  flex: 1;
+  flex: 0.5;
 }
-#downloadWrapper {
-  flex: 1;
+#actionsWrapper {
+  flex: 1.5;
   text-align: right;
 }
 #input {
@@ -133,6 +133,9 @@ document.addEventListener('DOMContentLoaded', function(event) {
   });
   el('download').addEventListener('click', function() {
     downloadJson();
+  });
+  el('copy').addEventListener('click', function() {
+    copyJson();
   });
   
   loadOptions();
@@ -227,6 +230,11 @@ document.addEventListener('DOMContentLoaded', function(event) {
     a.remove();
   }
   
+  function copyJson() {
+    const json = el('input').value;
+    navigator.clipboard.writeText(json).then(() => {}, (err) => console.error('copy error! ' + err));
+  }
+  
   /**
    * Returns whether or not an object is an object literal.
    * Using the solution found here: http://stackoverflow.com/a/16608074/18511
@@ -315,8 +323,9 @@ document.addEventListener('DOMContentLoaded', function(event) {
       <input type="radio" id="uglify" name="action" value="uglify" />
       <label for="uglify">Uglify</label>
     </div>
-    <div id="downloadWrapper">
-      <button id="download">Download JSON</button>
+    <div id="actionsWrapper">
+      <button id="download">&#8681; Download JSON</button>
+      <button id="copy">&#10697; Copy JSON</button>
     </div>
   </div>
   <div id="errorMessage"></div>
