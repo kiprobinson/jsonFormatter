@@ -113,11 +113,11 @@ document.addEventListener('DOMContentLoaded', function(event) {
   el('numSpaces').addEventListener('keyup', formatJson);
   el('prettify').addEventListener('click', formatJson);
   el('uglify').addEventListener('click', formatJson);
-  el('alphabetize').addEventListener('click', function() {
-    el('alphabetize_simplefirst').disabled = !el('alphabetize').checked;
+  el('sortKeys').addEventListener('click', function() {
+    el('sortKeys_simplefirst').disabled = !el('sortKeys').checked;
     formatJson();
   });
-  el('alphabetize_simplefirst').addEventListener('click', formatJson);
+  el('sortKeys_simplefirst').addEventListener('click', formatJson);
   el('numSpaces').addEventListener('focus', function() {
     el('spaces').checked = true;
     el('prettify').checked = true;
@@ -165,8 +165,8 @@ document.addEventListener('DOMContentLoaded', function(event) {
     {
       var jsonIn = el('input').value;
       if(jsonIn != '') {
-        if(el('alphabetize').checked)
-          jsonIn = alphabetizeJson(JSON.parse(jsonIn), el('alphabetize_simplefirst').checked);
+        if(el('sortKeys').checked)
+          jsonIn = sortKeys(JSON.parse(jsonIn), el('sortKeys_simplefirst').checked);
         el('input').value = JSON.stringify(JSON.parse(jsonIn), null, spacing);
       }
       setErrorMessage('');
@@ -178,16 +178,16 @@ document.addEventListener('DOMContentLoaded', function(event) {
   }
   
   /**
-   * Takes a javascript object, returns JSON string representation of object with properties sorted.
+   * Takes a javascript object, returns JSON string representation of object with keys sorted.
    */
-  function alphabetizeJson(obj, simpleFirst) {
+  function sortKeys(obj, simpleFirst) {
     var ret = '';
     if(Array.isArray(obj)) {
       ret += '[';
       for(var i = 0; i < obj.length; i++) {
         if(i > 0)
           ret += ',';
-        ret += alphabetizeJson(obj[i], simpleFirst);
+        ret += sortKeys(obj[i], simpleFirst);
       }
       ret += ']';
     }
@@ -206,7 +206,7 @@ document.addEventListener('DOMContentLoaded', function(event) {
       for(var i = 0; i < keys.length; i++) {
         if(i > 0)
           ret += ',';
-        ret += JSON.stringify(keys[i]) + ':' + alphabetizeJson(obj[keys[i]], simpleFirst);
+        ret += JSON.stringify(keys[i]) + ':' + sortKeys(obj[keys[i]], simpleFirst);
       }
       ret += '}';
     }
@@ -273,11 +273,11 @@ document.addEventListener('DOMContentLoaded', function(event) {
     if('string' === typeof saved.numSpaces && saved.numSpaces.match(/^[1-9]$/)) {
       el('numSpaces').value = saved.numSpaces;
     }
-    if('boolean' === typeof saved.alphabetize)
-      el('alphabetize').checked = saved.alphabetize;
-    if('boolean' === typeof saved.alphabetize_simplefirst)
-      el('alphabetize_simplefirst').checked = saved.alphabetize_simplefirst;
-    el('alphabetize_simplefirst').disabled = !el('alphabetize').checked
+    if('boolean' === typeof saved.sortKeys)
+      el('sortKeys').checked = saved.sortKeys;
+    if('boolean' === typeof saved.sortKeys_simplefirst)
+      el('sortKeys_simplefirst').checked = saved.sortKeys_simplefirst;
+    el('sortKeys_simplefirst').disabled = !el('sortKeys').checked
   }
   
   function saveOptions() {
@@ -285,8 +285,8 @@ document.addEventListener('DOMContentLoaded', function(event) {
       prettify: el('prettify').checked,
       tabs: el('tabs').checked,
       numSpaces: el('numSpaces').value,
-      alphabetize: el('alphabetize').checked,
-      alphabetize_simplefirst: el('alphabetize_simplefirst').checked,
+      sortKeys: el('sortKeys').checked,
+      sortKeys_simplefirst: el('sortKeys_simplefirst').checked,
     };
     
     try { localStorage.setItem('json-formatter', JSON.stringify(options)); }
@@ -313,10 +313,10 @@ document.addEventListener('DOMContentLoaded', function(event) {
         <label for="tabs">tabs</label>
       </div>
       <div style="margin-left: 1.0em;">
-        <input type="checkbox" id="alphabetize" />
-        <label for="alphabetize">Sort Structs?</label>
-        (<input type="checkbox" id="alphabetize_simplefirst" disabled />
-        <label for="alphabetize_simplefirst">Simple types first?</label>)
+        <input type="checkbox" id="sortKeys" />
+        <label for="sortKeys">Sort Keys?</label>
+        (<input type="checkbox" id="sortKeys_simplefirst" disabled />
+        <label for="sortKeys_simplefirst">Simple types first?</label>)
       </div>
     </div>
     <div id="uglifyControls">
