@@ -244,9 +244,10 @@ document.addEventListener('DOMContentLoaded', function(event) {
   };
   
   function setErrorMessage(msg) {
+    const isBlank = (el('input').value === '');
     el('errorMessage').textContent = msg;
-    el('download').disabled = (msg !== '');
-    el('copy').disabled = (msg !== '');
+    el('download').disabled = (isBlank || msg !== '');
+    el('copy').disabled = (isBlank || msg !== '');
   }
   
   function strCompareNoCase(a, b) {
