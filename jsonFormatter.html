@@ -246,6 +246,7 @@ document.addEventListener('DOMContentLoaded', function(event) {
   function setErrorMessage(msg) {
     el('errorMessage').textContent = msg;
     el('download').disabled = (msg !== '');
+    el('copy').disabled = (msg !== '');
   }
   
   function strCompareNoCase(a, b) {
