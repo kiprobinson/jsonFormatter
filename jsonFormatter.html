@@ -108,9 +108,8 @@ document.addEventListener('DOMContentLoaded', function(event) {
   //shortcut to getElementById...
   function el(name) { return document.getElementById(name); }
   
-  el('input').addEventListener('keyup', formatJson);
-  el('input').addEventListener('paste', () => setTimeout(formatJson));
-  el('numSpaces').addEventListener('keyup', formatJson);
+  el('input').addEventListener('input', formatJson);
+  el('numSpaces').addEventListener('input', formatJson);
   el('prettify').addEventListener('click', formatJson);
   el('uglify').addEventListener('click', formatJson);
   el('sortKeys').addEventListener('click', function() {
