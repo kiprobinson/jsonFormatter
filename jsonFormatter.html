@@ -97,6 +97,15 @@ input {
   font-weight: 300;
   padding: 4px;
 }
+#copy-spinner {
+  width: 17px;
+  height: 17px;
+  vertical-align: middle;
+  display: none;
+}
+#copy-success {
+  display: none;
+}
 .clear {
   clear: both;
 }
@@ -229,9 +238,24 @@ document.addEventListener('DOMContentLoaded', function(event) {
     a.remove();
   }
   
-  function copyJson() {
+  async function copyJson() {
+    el('copy-spinner').style.display = 'inline-block';
     const json = el('input').value;
-    navigator.clipboard.writeText(json).then(() => {}, (err) => console.error('copy error! ' + err));
+    try {
+      // copy usually happens way too fast, it looks weird. show the spinner for at least a little time
+      await Promise.all([
+        sleep(250),
+        navigator.clipboard.writeText(json),
+      ]);
+      el('copy-spinner').style.display = 'none';
+      el('copy-success').style.display = 'inline';
+      await sleep(800);
+      el('copy-success').style.display = 'none';
+    }
+    catch (err) {
+      el('copy-spinner').style.display = 'none';
+      console.error('copy error! ' + err);
+    }
   }
   
   /**
@@ -253,6 +277,10 @@ document.addEventListener('DOMContentLoaded', function(event) {
     a = a.toLowerCase();
     b = b.toLowerCase();
     return (a < b ? -1 : (a > b ? 1 : 0));
+  }
+  
+  async function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
   
   function loadOptions() {
@@ -326,7 +354,11 @@ document.addEventListener('DOMContentLoaded', function(event) {
     </div>
     <div id="actionsWrapper">
       <button id="download">&#8681; Download JSON</button>
-      <button id="copy">&#10697; Copy JSON</button>
+      <button id="copy">
+        &#10697; Copy JSON
+        <svg id="copy-spinner" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10.14,1.16a11,11,0,0,0-9,8.92A1.59,1.59,0,0,0,2.46,12,1.52,1.52,0,0,0,4.11,10.7a8,8,0,0,1,6.66-6.61A1.42,1.42,0,0,0,12,2.69h0A1.57,1.57,0,0,0,10.14,1.16Z"><animateTransform attributeName="transform" type="rotate" dur="0.75s" values="0 12 12;360 12 12" repeatCount="indefinite"/></path></svg>
+        <span id="copy-success">&check;</span>
+      </button>
     </div>
   </div>
   <div id="errorMessage"></div>
